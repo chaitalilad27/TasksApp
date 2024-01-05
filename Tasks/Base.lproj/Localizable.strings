@@ -1,0 +1,20 @@
+//
+//  Localizable.strings
+//  Tasks
+//
+//  Created by Chaitali Lad on 04/01/24.
+//
+
+// Localizable.strings
+"tasks" = "Tasks";
+"emptyStateMessage" = "Tap the '+' button\nto add a new task.";
+"addTask" = "Add Task";
+"editTask" = "Edit Task";
+"taskName" = "Task Name";
+"taskDescription" = "Task Description";
+"save" = "Save";
+"update" = "Update";
+"taskNameMandatory" = "Task name is mandatory";
+"somethingWentWrong" = "Something went wrong. Please try again!";
+"ok" = "OK";
+"error" = "Error";
