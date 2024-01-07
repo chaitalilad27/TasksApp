@@ -14,6 +14,19 @@ struct HomeView: View {
     @FetchRequest(sortDescriptors: []) var taskItems: FetchedResults<Task>
     @State private var taskToEdit: Task?
     @State private var isAddingTask: Bool = false
+    @State private var showCompletedTasks: Bool = false
+
+    private var unCompletedTasks: [Task] {
+        taskItems.filter { !$0.isCompleted }
+    }
+
+    private var completedTasks: [Task] {
+        taskItems.filter { $0.isCompleted }
+    }
+
+    private var completedTasksCount: Int {
+        return completedTasks.count
+    }
 
     // MARK: - Body
 
@@ -48,15 +61,42 @@ struct HomeView: View {
 
     private var taskList: some View {
         List {
-            ForEach(taskItems, id: \.self) { task in
+            ForEach(unCompletedTasks, id: \.self) { task in
                 TaskRowView(task: task)
                     .onTapGesture {
                         taskToEdit = task
                     }
             }
             .listRowBackground(Color.white)
+
+            if completedTasksCount > 0 {
+                completedTasksSection
+            }
         }
         .listStyle(PlainListStyle())
+    }
+
+    private var completedTasksSection: some View {
+        Section(header: completedTasksSectionHeader) {
+            if showCompletedTasks {
+                ForEach(completedTasks, id: \.self) { task in
+                    TaskRowView(task: task)
+                        .onTapGesture {
+                            taskToEdit = task
+                        }
+                }
+                .listRowBackground(Color.white)
+            }
+        }
+    }
+
+    private var completedTasksSectionHeader: some View {
+        HStack {
+            Text(NSLocalizedString("completedTasks", comment: "") + " (\(completedTasksCount))")
+            Spacer()
+            ToggleImageView(selectedImageName: "chevron.up", unSelectedImageName: "chevron.down", size: CGSize(width: 15, height: 10), selectedImageColor: .gray, unSelectedImageColor: .gray, isSelected: $showCompletedTasks) { }
+        }
+        .onTapGesture { showCompletedTasks.toggle() }
     }
 
     private var emptyStateView: some View {

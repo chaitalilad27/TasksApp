@@ -18,16 +18,20 @@ struct TaskRowView: View {
     // MARK: - Body
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            taskInfoSection
-            if !task.taskDetails.isEmpty {
-                taskDetailsSection
+        HStack(alignment: .top, content: {
+            markCompletedButton
+
+            VStack(alignment: .leading, spacing: 10) {
+                taskInfoSection
+                if !task.taskDetails.isEmpty {
+                    taskDetailsSection
+                }
             }
-        }
+        })
         .padding(10)
         .background(Color.white)
         .cornerRadius(10)
-        .shadow(color: Color.black.opacity(0.4), radius: 5, x: 2, y: 3)
+        .shadow(color: Color.black.opacity(0.2), radius: 3, x: 0, y: 2)
         .listRowSeparator(.hidden)
         .swipeActions(content: { deleteButton })
         .alert(item: $showAlert) { appAlert in
@@ -51,6 +55,13 @@ struct TaskRowView: View {
             starToggle
             bellToggle
         }
+    }
+
+    private var markCompletedButton: some View {
+        ToggleImageView(selectedImageName: "checkmark.circle.fill", unSelectedImageName: "circle", size: CGSize(width: 25, height: 25), selectedImageColor: .appThemeColor, unSelectedImageColor: .gray.opacity(0.7), isSelected: $task.isCompleted) {
+            _ = dataManager.saveChanges()
+        }
+        .padding(2)
     }
 
     private var starToggle: some View {
@@ -104,7 +115,7 @@ struct TaskRowView: View {
 struct TaskRowView_Previews: PreviewProvider {
 
     static var previews: some View {
-        let task = Task(id: UUID(), taskName: "Task", taskDetails: "Details", isStarred: true, isNotifyOn: false)
+        let task = Task(id: UUID(), taskName: "Task", taskDetails: "Details", isCompleted: false, isStarred: true, isNotifyOn: false)
         return TaskRowView(task: task)
     }
 }
