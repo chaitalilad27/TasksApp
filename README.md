@@ -8,8 +8,19 @@ Welcome to the **Tasks**, a delightful iOS application crafted with SwiftUI to e
 
 - **Task Management:** Effortlessly add, edit, and delete tasks.
 - **Priority Setting:** Highlight your priorities by starring important tasks.
+- **Mark Completion:** Instantly mark tasks as completed when they are done.
 - **Notifications:** Set reminders for tasks with the notification feature.
 - **User-Friendly Interface:** Enjoy a clean, intuitive design for a joyous user experience.
+
+📸 Sneak Peek
+-----------
+
+![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_1.png)
+![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_2.png)
+![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_3.png)
+![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_4.png)
+![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_5.png)
+![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_6.png)
 
 💻 Getting Started
 ------------------
@@ -38,7 +49,7 @@ Ready to dive in? Follow these simple steps to set up and run the Tasks App on y
 -   Tap the "+" button to add a new task.
 -   Swipe left on a task to delete it.
 -   Tap on a task to edit its details.
-
+-   Tap on a task to mark it as completed when done.
 
 🤝 Contributing
 ---------------
