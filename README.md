@@ -15,12 +15,14 @@ Welcome to the **Tasks**, a delightful iOS application crafted with SwiftUI to e
 📸 Sneak Peek
 -----------
 
-![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_1.png)
-![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_2.png)
-![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_3.png)
-![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_4.png)
-![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_5.png)
-![ScreenShot](https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_6.png)
+<p float="left">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_1.png" width="16%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_2.png" width="16%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_3.png" width="16%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_4.png" width="16%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_5.png" width="16%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_6.png" width="16%"">
+</p>
 
 💻 Getting Started
 ------------------
