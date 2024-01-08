@@ -14,6 +14,8 @@ struct ToggleImageView: View {
     var selectedImageName: String
     var unSelectedImageName: String
     var size: CGSize = CGSize(width: 25, height: 25)
+    var selectedImageColor: Color = .appYellow
+    var unSelectedImageColor: Color = .black
     @Binding var isSelected: Bool
     var onTapAction: () -> Void
 
@@ -23,7 +25,7 @@ struct ToggleImageView: View {
         Image(systemName: isSelected ? selectedImageName : unSelectedImageName)
             .resizable()
             .frame(width: size.width, height: size.height)
-            .foregroundColor(isSelected ? .appYellow : .black)
+            .foregroundColor(isSelected ? selectedImageColor : unSelectedImageColor)
             .onTapGesture {
                 isSelected.toggle()
                 onTapAction()
