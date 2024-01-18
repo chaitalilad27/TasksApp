@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeView: View {
 
     // MARK: - Properties
-
+    @EnvironmentObject var authManager: AuthManager
     @FetchRequest(sortDescriptors: []) var taskItems: FetchedResults<Task>
     @State private var taskToEdit: Task?
     @State private var isAddingTask: Bool = false
@@ -43,6 +43,19 @@ struct HomeView: View {
             }
             .sheet(item: $taskToEdit) { task in
                 taskEditorView(task: task)
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Log out") {
+                        print("Log out tapped!")
+                        authManager.signOut() { error in
+
+                            if let e = error {
+                                print(e.localizedDescription)
+                            }
+                        }
+                    }
+                }
             }
         }
     }

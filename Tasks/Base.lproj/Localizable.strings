@@ -6,6 +6,28 @@
 //
 
 // Localizable.strings
+
+// LOGIN
+"username" = "Username";
+"email" = "Email";
+"password" = "Password";
+"login" = "Log In";
+"dontHaveAnAccount" = "Don't have an account?";
+"or" = "or";
+"signup" = "Sign Up";
+"emailErrorMessage" = "Invalid email";
+"passwordErrorMessage" = "Invalid password e.g. Example@12";
+"loggedInSuccessfully" = "Logged in successfully!";
+"somethingWentWrong" = "Something went wrong. Please try again";
+
+// SIGNUP
+"confirmPassword" = "Confirm Password";
+"createAccount" = "Create Account";
+"alreadyHaveAnAccount" = "Already have an account?";
+"confirmPasswordErrorMessage" = "Confirm password does not match";
+"accountCreatedSuccessfully" = "Account created successfully!";
+
+// HOME
 "tasks" = "Tasks";
 "emptyStateMessage" = "Tap the '+' button\nto add a new task.";
 "addTask" = "Add Task";
