@@ -21,9 +21,12 @@ extension Task {
     @NSManaged public var isCompleted: Bool
     @NSManaged public var isStarred: Bool
     @NSManaged public var isNotifyOn: Bool
+    @NSManaged public var createdAt: Date
+    @NSManaged public var updatedAt: Date
+    @NSManaged public var category: TaskCategory?
 
     // Add a convenience initializer
-    convenience init(id: UUID, taskName: String, taskDetails: String, isCompleted: Bool = false, isStarred: Bool, isNotifyOn: Bool) {
+    convenience init(id: UUID, taskName: String, taskDetails: String, isCompleted: Bool = false, isStarred: Bool, isNotifyOn: Bool, createdAt: Date = Date(), taskCategory: TaskCategory) {
         self.init(context: DataManager().container.viewContext)
         self.id = id
         self.taskName = taskName
@@ -31,6 +34,9 @@ extension Task {
         self.isCompleted = isCompleted
         self.isStarred = isStarred
         self.isNotifyOn = isNotifyOn
+        self.createdAt = createdAt
+        self.updatedAt = createdAt
+        self.category = taskCategory
     }
 }
 
