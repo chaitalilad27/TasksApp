@@ -6,22 +6,25 @@ Welcome to the **Tasks**, a delightful iOS application crafted with SwiftUI to e
 🚀 Features
 -----------
 
+- **Authentication** Log in or sign up using email/password or social sign-ins like Google and Facebook.
 - **Task Management:** Effortlessly add, edit, and delete tasks.
 - **Priority Setting:** Highlight your priorities by starring important tasks.
 - **Mark Completion:** Instantly mark tasks as completed when they are done.
 - **Notifications:** Set reminders for tasks with the notification feature.
+- **Task Categories:** Now you can categorize tasks by adding or selecting from your created categories.
 - **User-Friendly Interface:** Enjoy a clean, intuitive design for a joyous user experience.
 
 📸 Sneak Peek
 -----------
 
 <p float="left">
-<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_1.png" width="16%"">
-<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_2.png" width="16%"">
-<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_3.png" width="16%"">
-<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_4.png" width="16%"">
-<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_5.png" width="16%"">
-<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_6.png" width="16%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_1.png" width="13%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_2.png" width="13%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_3.png" width="13%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_4.png" width="13%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_5.png" width="13%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_6.png" width="13%"">
+<img src="https://raw.githubusercontent.com/chaitalilad27/TasksApp/main/Screenshots/Tasks_7.png" width="13%"">
 </p>
 
 💻 Getting Started
@@ -49,9 +52,9 @@ Ready to dive in? Follow these simple steps to set up and run the Tasks App on y
 
 -   Launch the app to view your task list.
 -   Tap the "+" button to add a new task.
--   Swipe left on a task to delete it.
--   Tap on a task to edit its details.
+-   Tap on a task to edit its details or to delete it.
 -   Tap on a task to mark it as completed when done.
+-   Add task category to organize tasks effectively.
 
 🤝 Contributing
 ---------------
