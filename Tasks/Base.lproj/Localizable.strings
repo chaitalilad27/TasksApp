@@ -30,6 +30,9 @@
 // HOME
 "tasks" = "Tasks";
 "emptyStateMessage" = "Tap the '+' button\nto add a new task.";
+"completedTasks" = "Completed Tasks";
+
+// ADD / EDIT TASK
 "addTask" = "Add Task";
 "editTask" = "Edit Task";
 "taskName" = "Task Name";
@@ -40,4 +43,4 @@
 "somethingWentWrong" = "Something went wrong. Please try again!";
 "ok" = "OK";
 "error" = "Error";
-"completedTasks" = "Completed Tasks";"
+"addOrSelectCategory" = "Add or select category";

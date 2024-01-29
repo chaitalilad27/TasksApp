@@ -65,10 +65,25 @@ struct SignupView: View {
                         .font(.title3)
                         .foregroundColor(.appThemeColor)
                         .padding(.bottom, 15)
-                    
-                    // Google Sign-In Button
-                    GoogleSignInButton(style: .icon, action: { signUpWithGoogle() })
-                        .scaleEffect(1.6)
+
+                    HStack(spacing: 30) {
+                        // Google Sign-In Button
+                        GoogleSignInButton(style: .icon, action: { signUpWithGoogle() })
+                            .scaleEffect(1.6)
+
+                        Button(action: {
+                            signInWithFacebook()
+                        }) {
+                            Image("facebook")
+                                .resizable()
+                                .frame(width: 40, height: 35)
+                                .padding(.vertical, 15)
+                                .padding(.horizontal, 12)
+                                .background(Color.white)
+                                .cornerRadius(3)
+                                .shadow(color: Color.gray, radius: 3, x: 0, y: 2)
+                        }
+                    }
                 }
                 
                 Spacer()
@@ -161,6 +176,14 @@ struct SignupView: View {
     private func signUpWithGoogle() {
         keyboardManager.hideKeyboard()
         authManager.signInWithGoogle(presenting: getRootViewController()) { error in
+            handleSignUpResponse(error: error)
+        }
+    }
+
+    private func signInWithFacebook() {
+        keyboardManager.hideKeyboard()
+        authManager.signWithWithFacebook() { error in
+            isLoading = true
             handleSignUpResponse(error: error)
         }
     }

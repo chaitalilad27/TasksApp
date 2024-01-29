@@ -9,12 +9,14 @@ import SwiftUI
 import Firebase
 import FirebaseAuth
 import GoogleSignIn
+import FacebookLogin
 
 class AuthManager: NSObject, ObservableObject {
 
     // MARK: - Properties
 
     @Published var isUserLoggedIn = false
+    let loginManager = LoginManager()
 
     // MARK: - Initialization
 
@@ -136,6 +138,35 @@ extension AuthManager {
             let accessToken = user.accessToken
             let googleAuthCredential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString, accessToken: accessToken.tokenString)
             self.signInWithFirebase(withCredential: googleAuthCredential, completion: completion)
+        }
+    }
+}
+
+// MARK: - Facebook Sign In
+
+extension AuthManager {
+
+    // MARK: Sign In with Facebook
+
+    /// Initiates the Facebook Sign In process.
+    /// - Parameters:
+    ///   - completion: Closure called upon completion with an optional error.
+    func signWithWithFacebook(completion: @escaping (Error?) -> Void) {
+        loginManager.logIn(permissions: ["public_profile", "email"], from: nil) { (result, error) in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+
+            if let result = result, !result.isCancelled {
+                guard let accessToken = result.token else {
+                    completion(error)
+                    return
+                }
+
+                let facebookAuthCredential = FacebookAuthProvider.credential(withAccessToken: accessToken.tokenString)
+                self.signInWithFirebase(withCredential: facebookAuthCredential, completion: completion)
+            }
         }
     }
 }

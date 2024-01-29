@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GoogleSignInSwift
+import FacebookLogin
 
 // MARK: - LoginView
 
@@ -68,10 +69,25 @@ struct LoginView: View {
                             .font(.title3)
                             .foregroundColor(.appThemeColor)
                             .padding(.bottom, 15)
-                        
-                        // Google Sign-In Button
-                        GoogleSignInButton(style: .icon, action: { signInWithGoogle() })
-                            .scaleEffect(1.6)
+
+                        HStack(spacing: 30) {
+                            // Google Sign-In Button
+                            GoogleSignInButton(style: .icon, action: { signInWithGoogle() })
+                                .scaleEffect(1.6)
+
+                            Button(action: {
+                                signInWithFacebook()
+                            }) {
+                                Image("facebook")
+                                    .resizable()
+                                    .frame(width: 40, height: 35)
+                                    .padding(.vertical, 15)
+                                    .padding(.horizontal, 12)
+                                    .background(Color.white)
+                                    .cornerRadius(3)
+                                    .shadow(color: Color.gray, radius: 3, x: 0, y: 2)
+                            }
+                        }
                     }
                     
                     //    Spacer()
@@ -158,6 +174,14 @@ struct LoginView: View {
     private func signInWithGoogle() {
         keyboardManager.hideKeyboard()
         authManager.signInWithGoogle(presenting: getRootViewController()) { error in
+            isLoading = true
+            handleSignInResponse(error: error)
+        }
+    }
+
+    private func signInWithFacebook() {
+        keyboardManager.hideKeyboard()
+        authManager.signWithWithFacebook() { error in
             isLoading = true
             handleSignInResponse(error: error)
         }

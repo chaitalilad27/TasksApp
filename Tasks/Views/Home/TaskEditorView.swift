@@ -22,6 +22,8 @@ struct TaskEditorView: View {
     @State private var taskDescription: String
     @State private var isStarred: Bool
     @State private var isNotifyOn: Bool
+    @State private var newCategory: String = ""
+    @State private var category: TaskCategory?
     @State private var showAlert: AppAlert?
 
     // MARK: - Initializer
@@ -33,39 +35,65 @@ struct TaskEditorView: View {
         self._taskDescription = State(initialValue: task?.taskDetails ?? "")
         self._isStarred = State(initialValue: task?.isStarred ?? false)
         self._isNotifyOn = State(initialValue: task?.isNotifyOn ?? false)
+        self._category = State(initialValue: task?.category)
     }
 
     // MARK: - Body
 
     var body: some View {
         VStack(alignment: .leading, content: {
-            titleSection
             inputFieldsSection
             togglesSection
+            categoryView
+            Spacer()
             saveUpdateButton
         })
-        .padding(15)
+        .padding(.vertical, 25)
+        .padding(.horizontal, 15)
         .background(Color.white.ignoresSafeArea(.all))
+        .navigationBarStyle(title: isEditingTask ? "editTask" : "addTask")
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .resizable()
+                        .frame(width: 10, height: 20)
+                        .foregroundColor(.white)
+                }
+            }
+
+            if let task = task {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        deleteTask(task)
+                    } label: {
+                        Image(systemName: "trash.fill")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.white)
+                    }
+                }
+            }
+        }
         .alert(item: $showAlert) { appAlert in
             Alert(
                 title: Text(appAlert.title),
                 message: Text(appAlert.message),
-                dismissButton: .default(Text(NSLocalizedString("ok", comment: "")))
+                dismissButton: .default(Text("ok".localized))
             )
         }
     }
 
     // MARK: - Subviews
 
-    private var titleSection: some View {
-        Text(isEditingTask ? NSLocalizedString("editTask", comment: "") : NSLocalizedString("addTask", comment: ""))
-            .font(.title)
-    }
-
     private var inputFieldsSection: some View {
         VStack(alignment: .leading, spacing: 15) {
-            CustomTextField(placeholder: NSLocalizedString("taskName", comment: ""), text: $taskName)
-            CustomTextField(placeholder: NSLocalizedString("taskDescription", comment: ""), text: $taskDescription)
+            CLTextField(text: $taskName, state: .constant(.valid), showError: .constant(false), errorMessage: .constant(""), placeholder: "taskName".localized, keyboardType: .asciiCapable)
+
+            CLTextField(text: $taskDescription, state: .constant(.valid), showError: .constant(false), errorMessage: .constant(""), placeholder: "taskDescription".localized, keyboardType: .asciiCapable)
         }
     }
 
@@ -78,11 +106,33 @@ struct TaskEditorView: View {
         .padding(5)
     }
 
+    private var categoryView: some View {
+        VStack(alignment: .leading) {
+
+            CLTextField(text: $newCategory, state: .constant(.valid), showError: .constant(false), errorMessage: .constant(""), placeholder: "addOrSelectCategory".localized, keyboardType: .asciiCapable)
+                .onSubmit {
+                    if !newCategory.isEmpty {
+                        dataManager.addTaskCategory(taskCategoryID: UUID(), categoryName: newCategory) { result in
+                            switch result {
+                            case .success:
+                                category = dataManager.fetchTaskCategory(with: newCategory)?.first
+                            case .failure:
+                                showAppAlert(title: "error".localized, message: "somethingWentWrong".localized)
+                            }
+                            newCategory = ""
+                        }
+                    }
+                }
+
+            TagView(selectedCategory: $category)
+        }
+    }
+
     private var saveUpdateButton: some View {
         Button(action: saveTask) {
             HStack {
                 Spacer()
-                Text((isEditingTask ? NSLocalizedString("update", comment: "") : NSLocalizedString("save", comment: "")).uppercased())
+                Text((isEditingTask ? "update".localized : "save".localized).uppercased())
                     .font(.body)
                     .fontWeight(.bold)
                     .padding(15)
@@ -102,16 +152,26 @@ struct TaskEditorView: View {
 
         if isEditingTask {
             if let existingTask = task {
-                dataManager.updateTask(existingTask, withName: taskName, details: taskDescription, isStarred: isStarred, isNotifyOn: isNotifyOn) { result in
+                dataManager.updateTask(existingTask, withName: taskName, details: taskDescription, isStarred: isStarred, isNotifyOn: isNotifyOn, taskCategory: category) { result in
                     handleSaveUpdateResult(result)
                 }
             } else {
-                showAppAlert(title: NSLocalizedString("Error", comment: ""), message: NSLocalizedString("somethingWentWrong", comment: ""))
+                showAppAlert(title: "error".localized, message: "somethingWentWrong".localized)
             }
         } else {
-            dataManager.addTask(taskID: taskID, taskName: taskName, taskDetails: taskDescription, isStarred: isStarred, isNotifyOn: isNotifyOn) { result in
+            dataManager.addTask(taskID: taskID, taskName: taskName, taskDetails: taskDescription, isStarred: isStarred, isNotifyOn: isNotifyOn, taskCategory: category) { result in
                 handleSaveUpdateResult(result)
             }
+        }
+    }
+
+
+    // MARK: - Delete Task
+
+    /// Deletes the task from the data manager.
+    private func deleteTask(_ task: Task) {
+        dataManager.deleteTask(task) { result in
+            handleSaveUpdateResult(result)
         }
     }
 
@@ -119,7 +179,7 @@ struct TaskEditorView: View {
 
     private func validateTaskValues() -> Bool {
         guard !taskName.isEmpty else {
-            showAppAlert(title: NSLocalizedString("error", comment: ""), message: NSLocalizedString("taskNameMandatory", comment: ""))
+            showAppAlert(title: "error".localized, message: "somethingWentWrong".localized)
             return false
         }
         return true
@@ -132,7 +192,7 @@ struct TaskEditorView: View {
         case .success:
             presentationMode.wrappedValue.dismiss()
         case .failure:
-            showAppAlert(title: NSLocalizedString("error", comment: ""), message: NSLocalizedString("somethingWentWrong", comment: ""))
+            showAppAlert(title: "error".localized, message: "somethingWentWrong".localized)
         }
     }
 
@@ -147,6 +207,8 @@ struct TaskEditorView: View {
 
 struct TaskEditorView_Previews: PreviewProvider {
     static var previews: some View {
-        TaskEditorView()
+        NavigationView {
+            TaskEditorView()
+        }
     }
 }

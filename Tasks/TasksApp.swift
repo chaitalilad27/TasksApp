@@ -14,7 +14,6 @@ struct TasksApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var manager: DataManager = DataManager()
     @StateObject private var authManager = AuthManager()
-    @AppStorage("isSignedIn") var isSignIn = false
 
     // MARK: - Body
 

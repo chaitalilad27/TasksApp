@@ -18,7 +18,7 @@ extension View {
     ///   - navigationBarColor: The background color for the navigation bar.
     /// - Returns: A modified view with the specified navigation bar style.
     func navigationBarStyle(title: String, displayMode: NavigationBarItem.TitleDisplayMode = .inline, navigationBarColor: Color = Color.appThemeColor) -> some View {
-        self.navigationTitle(NSLocalizedString(title, comment: ""))  // Set the localized title for the navigation bar
+        self.navigationTitle(title.localized)  // Set the localized title for the navigation bar
             .toolbarColorScheme(.dark, for: .navigationBar)  // Set color scheme for the navigation bar
             .navigationBarTitleDisplayMode(displayMode)  // Set the display mode for the navigation bar title
             .toolbarBackground(navigationBarColor, for: .navigationBar)  // Set the background color for the navigation bar

@@ -7,6 +7,7 @@
 
 import Foundation
 
+// Enum to define various validation types
 enum ValidationType {
     case email
     case password
@@ -19,35 +20,44 @@ enum ValidationType {
 }
 
 extension String {
+
+    // Checks if the string is alphanumeric with no spaces
     var isAlphanumericWithNoSpaces: Bool {
         rangeOfCharacter(from: CharacterSet.alphanumerics.inverted) == nil
     }
 
+    // Checks if the string has punctuation characters
     var hasPunctuationCharacters: Bool {
         rangeOfCharacter(from: CharacterSet.punctuationCharacters) != nil
     }
 
+    // Checks if the string has numbers
     var hasNumbers: Bool {
         rangeOfCharacter(from: CharacterSet(charactersIn: "0123456789")) != nil
     }
 
+    // Localizes the string
     var localized: String {
         localize()
     }
 
+    // Removes spaces from the string
     var withNoSpaces: String {
         filter { !$0.isWhitespace }
     }
 
+    // Localizes the string with a comment
     func localize(comment: String = "") -> String {
         NSLocalizedString(self, comment: comment)
     }
 
+    // Creates a valid filename from the string
     var validFilename: String {
         guard !isEmpty else { return "emptyFilename" }
         return addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? "emptyFilename"
     }
 
+    // Validates the string based on the specified type
     func isValid(type: ValidationType, isRequired: Bool = true) -> Bool {
         guard isRequired || !isEmpty else { return true }
         switch type {
@@ -68,7 +78,7 @@ extension String {
         }
     }
 
-    //Regex fulfill RFC 5322 Internet Message format
+    // Checks if the string is a valid email address
     func isEmailValid() -> Bool {
         let predicate = NSPredicate(
             format: "SELF MATCHES %@",
@@ -77,6 +87,7 @@ extension String {
         return predicate.evaluate(with: self)
     }
 
+    // Checks if the string is a valid password
     func isPasswordValid() -> Bool {
         let predicate = NSPredicate(
             format: "SELF MATCHES %@",
@@ -85,10 +96,12 @@ extension String {
         return predicate.evaluate(with: self)
     }
 
+    // Checks if the string is a valid integer
     func isInteger() -> Bool {
         Int(self) != nil
     }
 
+    // Checks if the string is a valid phone number
     func isPhoneNumber() -> Bool {
         let phoneTest = NSPredicate(format: "SELF MATCHES %@", "^\\d{3}-\\d{3}-\\d{4}$")
         return phoneTest.evaluate(with: self)

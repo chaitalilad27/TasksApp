@@ -11,22 +11,11 @@ struct HomeView: View {
 
     // MARK: - Properties
     @EnvironmentObject var authManager: AuthManager
-    @FetchRequest(sortDescriptors: []) var taskItems: FetchedResults<Task>
-    @State private var taskToEdit: Task?
-    @State private var isAddingTask: Bool = false
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "updatedAt", ascending: false), NSSortDescriptor(key: "isStarred", ascending: false)]) var taskItems: FetchedResults<Task>
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "categoryName", ascending: true)]) var taskCategories: FetchedResults<TaskCategory>
+
     @State private var showCompletedTasks: Bool = false
-
-    private var unCompletedTasks: [Task] {
-        taskItems.filter { !$0.isCompleted }
-    }
-
-    private var completedTasks: [Task] {
-        taskItems.filter { $0.isCompleted }
-    }
-
-    private var completedTasksCount: Int {
-        return completedTasks.count
-    }
+    @State private var selectedCategory: String = ""
 
     // MARK: - Body
 
@@ -34,26 +23,38 @@ struct HomeView: View {
         NavigationView {
             ZStack(alignment: .bottom) {
                 contentStack
-                floatingButtonView
             }
             .background(Color.white.ignoresSafeArea(.all))
             .navigationBarStyle(title: "tasks")
-            .sheet(isPresented: $isAddingTask) {
-                taskEditorView(task: nil)
-            }
-            .sheet(item: $taskToEdit) { task in
-                taskEditorView(task: task)
+            .onAppear {
+                if selectedCategory.isEmpty, !taskCategories.isEmpty {
+                    selectedCategory = taskCategories[0].categoryName
+                }
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Log out") {
-                        print("Log out tapped!")
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
                         authManager.signOut() { error in
-
                             if let e = error {
                                 print(e.localizedDescription)
                             }
                         }
+                    } label: {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(.white)
+                    }
+                }
+
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink {
+                        TaskEditorView(task: nil)
+                    } label: {
+                        Image(systemName: "plus")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundColor(.white)
                     }
                 }
             }
@@ -63,49 +64,91 @@ struct HomeView: View {
     // MARK: - Subviews
 
     private var contentStack: some View {
-        VStack {
+        VStack(spacing: 0) {
             if taskItems.isEmpty {
                 emptyStateView
             } else {
-                taskList
+                categoryListView
+
+                TabView(selection: $selectedCategory) {
+                    ForEach(taskCategories, id: \.self) { taskCategory in
+                        taskList(taskCategory)
+                            .tag(taskCategory.categoryName)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .animation(.easeIn, value: selectedCategory)
+                .transition(.asymmetric(insertion: .move(edge: .leading), removal: .move(edge: .trailing)))
+            }
+        }
+        .padding([.top, .horizontal], 10)
+    }
+
+    private var categoryListView: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 5) {
+                ForEach(taskCategories, id: \.self) { taskCategory in
+                    Text(taskCategory.categoryName)
+                        .font(.body)
+                        .fontWeight(.medium)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 10)
+                        .background(selectedCategory == taskCategory.categoryName ? Color.appThemeColor: Color.gray.opacity(0.6))
+                        .cornerRadius(.infinity)
+                        .onTapGesture {
+                            selectedCategory = taskCategory.categoryName
+                        }
+                        .tag(taskCategory.categoryName)
+                }
             }
         }
     }
 
-    private var taskList: some View {
-        List {
-            ForEach(unCompletedTasks, id: \.self) { task in
-                TaskRowView(task: task)
-                    .onTapGesture {
-                        taskToEdit = task
-                    }
+    private func getUncompletedTasks(_ taskCategory: TaskCategory) -> [Task] {
+        return taskItems.filter { $0.category == taskCategory && !$0.isCompleted }
+    }
+
+    private func taskList(_ category: TaskCategory) -> some View {
+        ScrollView {
+            ForEach(getUncompletedTasks(category), id: \.self) { task in
+                NavigationLink {
+                    TaskEditorView(task: task)
+                } label: {
+                    TaskRowView(task: task)
+                        .id(task.id)
+                }
+                .listRowSeparator(.hidden)
             }
             .listRowBackground(Color.white)
 
-            if completedTasksCount > 0 {
-                completedTasksSection
+            if let completedTasks = taskItems.filter { $0.category == category && $0.isCompleted }, completedTasks.count > 0 {
+                completedTasksSection(completedTasks)
             }
         }
-        .listStyle(PlainListStyle())
+        .padding(.top, 10)
     }
 
-    private var completedTasksSection: some View {
-        Section(header: completedTasksSectionHeader) {
+    private func completedTasksSection(_ tasks: [Task]) -> some View {
+        Section(header: completedTasksSectionHeader(tasks.count)) {
             if showCompletedTasks {
-                ForEach(completedTasks, id: \.self) { task in
-                    TaskRowView(task: task)
-                        .onTapGesture {
-                            taskToEdit = task
-                        }
+                ForEach(tasks, id: \.self) { task in
+                    NavigationLink {
+                        TaskEditorView(task: task)
+                    } label: {
+                        TaskRowView(task: task)
+                            .id(task.id)
+                    }
+                    .listRowSeparator(.hidden)
                 }
                 .listRowBackground(Color.white)
             }
         }
     }
 
-    private var completedTasksSectionHeader: some View {
+    private func completedTasksSectionHeader(_ count: Int) -> some View {
         HStack {
-            Text(NSLocalizedString("completedTasks", comment: "") + " (\(completedTasksCount))")
+            Text("completedTasks".localized + " (\(count))")
             Spacer()
             ToggleImageView(selectedImageName: "chevron.up", unSelectedImageName: "chevron.down", size: CGSize(width: 15, height: 10), selectedImageColor: .gray, unSelectedImageColor: .gray, isSelected: $showCompletedTasks) { }
         }
@@ -120,32 +163,13 @@ struct HomeView: View {
                 .resizable()
                 .frame(width: 200, height: 200)
 
-            Text(NSLocalizedString("emptyStateMessage", comment: ""))
+            Text("emptyStateMessage".localized)
                 .font(.title2)
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
 
             Spacer()
         }
-    }
-
-    private var floatingButtonView: some View {
-        HStack {
-            Spacer()
-
-            FloatingButton(systemImageName: "plus") {
-                isAddingTask = true
-            }
-        }
-    }
-
-    private func taskEditorView(task: Task?) -> some View {
-        TaskEditorView(task: task)
-            .presentationDetents([.height(350)])
-            .presentationDragIndicator(.visible)
-            .onDisappear {
-                isAddingTask = false
-            }
     }
 }
 
